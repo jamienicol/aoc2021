@@ -1,42 +1,66 @@
 use anyhow::Result;
-use bitvec::prelude::*;
+use bitvec::{prelude::*};
+
+fn parse_input() -> Result<Vec<BitVec<Msb0>>> {
+    let input = std::fs::read_to_string("res/day03")?
+        .lines()
+        .map(|l| l.chars().map(|c| c == '1').collect())
+        .collect();
+
+    Ok(input)
+}
+
+fn transpose_values(input: &[BitVec<Msb0>]) -> Vec<BitVec<Msb0>> {
+    (0..input[0].len())
+        .map(|i| input.iter().map(|v| v[i]).collect::<BitVec<Msb0>>())
+        .collect::<Vec<_>>()
+}
 
 pub fn part_a() -> Result<usize> {
-    let input = std::fs::read_to_string("res/day03")?;
+    let values = parse_input()?;
 
-    let values = input
-        .lines()
-        .map(|l| l.chars().map(|c| c == '1').collect::<BitVec<Msb0>>())
-        .collect::<Vec<_>>();
-
-    let columns = (0..values[0].len())
-        .map(|i| values.iter().map(|v| v[i]).collect::<BitVec<Msb0>>())
-        .collect::<Vec<_>>();
+    let columns = transpose_values(&values);
 
     let gamma: usize = columns
         .iter()
-        .map(|c| c.count_zeros() < values.len() / 2)
+        .map(|c| c.count_zeros() < c.count_ones())
         .collect::<BitVec<Msb0>>()
-        .load_be();
+        .load();
 
     let epsilon: usize = columns
         .iter()
-        .map(|c| c.count_zeros() >= values.len() / 2)
+        .map(|c| c.count_zeros() >= c.count_ones())
         .collect::<BitVec<Msb0>>()
-        .load_be();
+        .load();
 
     let result = gamma * epsilon;
     Ok(result)
 }
 
+fn find_rating(values: Vec<BitVec<Msb0>>, most_common: bool) -> usize {
+    let rating = (0..values[0].len()).fold(values.clone(), |values, i| {
+        if values.len() == 1 {
+            return values;
+        };
+
+        let columns = transpose_values(&values);
+
+        values
+            .into_iter()
+            .filter(|v| v[i] == (columns[i].count_ones() >= columns[i].count_zeros()) ^ most_common)
+            .collect::<Vec<BitVec<Msb0>>>()
+    });
+
+    assert!(rating.len() == 1);
+    rating[0].load()
+}
+
 pub fn part_b() -> Result<usize> {
-    let input = std::fs::read_to_string("res/day03")?;
+    let values = parse_input()?;
 
-    let values = input
-        .lines()
-        .map(|l| l.chars().map(|c| c == '1').collect::<BitVec<Msb0>>())
-        .collect::<Vec<_>>();
+    let oxygen = find_rating(values.clone(), true);
+    let co2 = find_rating(values, false);
 
-    let result = 0;
+    let result = oxygen * co2;
     Ok(result)
 }
