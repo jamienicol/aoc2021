@@ -55,15 +55,23 @@ pub fn part_a() -> Result<usize> {
 
     let (_, commands) = parse_commands(&input).map_err(|e| anyhow!("{:?}", e))?;
 
-    let (x, y) = commands
+    struct Position {
+        x: usize,
+        y: usize,
+    }
+
+    let pos = commands
         .iter()
-        .fold((0, 0), |(x, y), command| match command.direction {
-            Direction::Forward => (x + command.distance, y),
-            Direction::Down => (x, y + command.distance),
-            Direction::Up => (x, y - command.distance),
+        .fold(Position { x: 0, y: 0 }, |mut pos, command| {
+            match command.direction {
+                Direction::Forward => pos.x += command.distance,
+                Direction::Down => pos.y += command.distance,
+                Direction::Up => pos.y -= command.distance,
+            };
+            pos
         });
 
-    Ok(x * y)
+    Ok(pos.x * pos.y)
 }
 
 pub fn part_b() -> Result<usize> {
@@ -71,14 +79,25 @@ pub fn part_b() -> Result<usize> {
 
     let (_, commands) = parse_commands(&input).map_err(|e| anyhow!("{:?}", e))?;
 
-    let ((x, y), _aim) =
-        commands.iter().fold(((0, 0), 0), |((x, y), aim), command| {
+    struct Position {
+        x: usize,
+        y: usize,
+        aim: isize,
+    }
+
+    let pos = commands
+        .iter()
+        .fold(Position { x: 0, y: 0, aim: 0 }, |mut pos, command| {
             match command.direction {
-                Direction::Forward => ((x + command.distance, y + aim * command.distance), aim),
-                Direction::Down => ((x, y), aim + command.distance),
-                Direction::Up => ((x, y), aim - command.distance),
+                Direction::Forward => {
+                    pos.x += command.distance;
+                    pos.y = (pos.y as isize + pos.aim * command.distance as isize) as usize;
+                }
+                Direction::Down => pos.aim += command.distance as isize,
+                Direction::Up => pos.aim -= command.distance as isize,
             }
+            pos
         });
 
-    Ok(x * y)
+    Ok(pos.x * pos.y)
 }
