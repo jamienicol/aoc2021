@@ -3,6 +3,7 @@ use anyhow::Result;
 mod day01;
 mod day02;
 mod day03;
+mod day04;
 
 fn main() -> Result<()> {
     let result_1a = day01::part_a()?;
@@ -22,6 +23,12 @@ fn main() -> Result<()> {
 
     let result_3b = day03::part_b()?;
     println!("Day 3, part B: {}", result_3b);
+
+    let result_4a = day04::part_a()?;
+    println!("Day 4, part A: {}", result_4a);
+
+    let result_4b = day04::part_b()?;
+    println!("Day 4, part B: {}", result_4b);
 
     Ok(())
 }
