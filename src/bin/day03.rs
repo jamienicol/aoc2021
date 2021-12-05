@@ -24,7 +24,7 @@ fn find_gamma_bit(column: &BitVec<Msb0>) -> bool {
     column.count_ones() >= column.count_zeros()
 }
 
-pub fn part_a() -> Result<usize> {
+fn part_a() -> Result<usize> {
     let values = parse_input()?;
 
     let columns = transpose_values(&values, 0..values[0].len());
@@ -68,7 +68,7 @@ fn find_rating(values: Vec<BitVec<Msb0>>, most_common: bool) -> usize {
     rating[0].load()
 }
 
-pub fn part_b() -> Result<usize> {
+fn part_b() -> Result<usize> {
     let values = parse_input()?;
 
     let oxygen = find_rating(values.clone(), true);
@@ -76,4 +76,14 @@ pub fn part_b() -> Result<usize> {
 
     let result = oxygen * co2;
     Ok(result)
+}
+
+fn main() -> Result<()> {
+    let result_a = part_a()?;
+    println!("Day 3, part A: {}", result_a);
+
+    let result_b = part_b()?;
+    println!("Day 3, part B: {}", result_b);
+
+    Ok(())
 }

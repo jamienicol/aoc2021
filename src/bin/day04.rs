@@ -94,7 +94,7 @@ fn parse_game(input: &str) -> IResult<&str, BingoGame> {
     Ok((input, BingoGame { draw, boards }))
 }
 
-pub fn part_a() -> Result<usize> {
+fn part_a() -> Result<usize> {
     let input = std::fs::read_to_string("res/day04")?;
 
     let (_, mut game) = parse_game(&input).map_err(|e| anyhow!("{:?}", e))?;
@@ -118,7 +118,7 @@ pub fn part_a() -> Result<usize> {
     Err(anyhow!("Could not find winning board"))
 }
 
-pub fn part_b() -> Result<usize> {
+fn part_b() -> Result<usize> {
     let input = std::fs::read_to_string("res/day04")?;
 
     let (_, mut game) = parse_game(&input).map_err(|e| anyhow!("{:?}", e))?;
@@ -144,4 +144,14 @@ pub fn part_b() -> Result<usize> {
     }
 
     last_winner.ok_or_else(|| anyhow!("Could not find winning board"))
+}
+
+fn main() -> Result<()> {
+    let result_a = part_a()?;
+    println!("Day 4, part A: {}", result_a);
+
+    let result_b = part_b()?;
+    println!("Day 4, part B: {}", result_b);
+
+    Ok(())
 }

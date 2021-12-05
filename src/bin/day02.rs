@@ -50,7 +50,7 @@ fn parse_commands(input: &str) -> IResult<&str, Vec<Command>> {
     separated_list1(newline, parse_command)(input)
 }
 
-pub fn part_a() -> Result<usize> {
+fn part_a() -> Result<usize> {
     let input = std::fs::read_to_string("res/day02")?;
 
     let (_, commands) = parse_commands(&input).map_err(|e| anyhow!("{:?}", e))?;
@@ -74,7 +74,7 @@ pub fn part_a() -> Result<usize> {
     Ok(pos.x * pos.y)
 }
 
-pub fn part_b() -> Result<usize> {
+fn part_b() -> Result<usize> {
     let input = std::fs::read_to_string("res/day02")?;
 
     let (_, commands) = parse_commands(&input).map_err(|e| anyhow!("{:?}", e))?;
@@ -100,4 +100,14 @@ pub fn part_b() -> Result<usize> {
         });
 
     Ok(pos.x * pos.y)
+}
+
+fn main() -> Result<()> {
+    let result_a = part_a()?;
+    println!("Day 2, part A: {}", result_a);
+
+    let result_b = part_b()?;
+    println!("Day 2, part B: {}", result_b);
+
+    Ok(())
 }
