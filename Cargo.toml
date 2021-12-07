@@ -8,4 +8,5 @@ edition = "2018"
 [dependencies]
 anyhow = "1.0"
 bitvec = "0.22.3"
+itertools = "0.10.3"
 nom = "7.1.0"
