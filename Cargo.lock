@@ -16,6 +16,7 @@ dependencies = [
  "bitvec",
  "itertools",
  "nom",
+ "nom-bitvec",
 ]
 
 [[package]]
@@ -72,6 +73,16 @@ dependencies = [
  "memchr",
  "minimal-lexical",
  "version_check",
+]
+
+[[package]]
+name = "nom-bitvec"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d39f33b923d8dc77a568029d7bd41a5321f01b793eaf8707514daf308df395cd"
+dependencies = [
+ "bitvec",
+ "nom",
 ]
 
 [[package]]
