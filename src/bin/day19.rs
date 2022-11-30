@@ -25,19 +25,18 @@ fn parse_beacon(input: &str) -> IResult<&str, Point3D<i32>> {
 
 #[derive(Debug, Clone)]
 struct Scanner {
-    id: usize,
     beacons: Vec<Point3D<i32>>,
 }
 
 fn parse_scanner(input: &str) -> IResult<&str, Scanner> {
     let (input, _) = tag("--- scanner ")(input)?;
-    let (input, id) = map_res(digit1, str::parse::<usize>)(input)?;
+    let (input, _id) = map_res(digit1, str::parse::<usize>)(input)?;
     let (input, _) = tag(" ---")(input)?;
     let (input, _) = newline(input)?;
 
     let (input, beacons) = separated_list1(newline, parse_beacon)(input)?;
 
-    Ok((input, Scanner { id, beacons }))
+    Ok((input, Scanner { beacons }))
 }
 
 fn parse_input(input: &str) -> IResult<&str, Vec<Scanner>> {

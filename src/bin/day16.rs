@@ -160,42 +160,17 @@ fn parse_input(input: &str) -> Result<Packet> {
 fn sum_versions(packet: &Packet) -> usize {
     match packet.packet_type {
         PacketType::Literal(_) => packet.version as usize,
-        _ => {
-            packet.version as usize
-                + packet
-                    .subpackets
-                    .iter()
-                    .map(|subpacket| sum_versions(subpacket))
-                    .sum::<usize>()
-        }
+        _ => packet.version as usize + packet.subpackets.iter().map(sum_versions).sum::<usize>(),
     }
 }
 
 fn evaluate(packet: &Packet) -> usize {
     match packet.packet_type {
         PacketType::Literal(val) => val,
-        PacketType::Sum => packet
-            .subpackets
-            .iter()
-            .map(|subpacket| evaluate(subpacket))
-            .sum(),
-        PacketType::Product => packet
-            .subpackets
-            .iter()
-            .map(|subpacket| evaluate(subpacket))
-            .product(),
-        PacketType::Minimum => packet
-            .subpackets
-            .iter()
-            .map(|subpacket| evaluate(subpacket))
-            .min()
-            .unwrap(),
-        PacketType::Maximum => packet
-            .subpackets
-            .iter()
-            .map(|subpacket| evaluate(subpacket))
-            .max()
-            .unwrap(),
+        PacketType::Sum => packet.subpackets.iter().map(evaluate).sum(),
+        PacketType::Product => packet.subpackets.iter().map(evaluate).product(),
+        PacketType::Minimum => packet.subpackets.iter().map(evaluate).min().unwrap(),
+        PacketType::Maximum => packet.subpackets.iter().map(evaluate).max().unwrap(),
         PacketType::GreaterThan => {
             assert_eq!(packet.subpackets.len(), 2);
             (evaluate(&packet.subpackets[0]) > evaluate(&packet.subpackets[1])) as _

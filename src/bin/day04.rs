@@ -41,7 +41,7 @@ impl BingoBoard {
     fn score(&self) -> usize {
         self.cells
             .iter()
-            .filter_map(|cell| (!cell.checked).then(|| cell.number))
+            .filter_map(|cell| (!cell.checked).then_some(cell.number))
             .sum()
     }
 }
